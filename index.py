@@ -1,4 +1,4 @@
-import urlib2
+import urllib2
 import SimpleHTTPServer
 import SocketServer
 
