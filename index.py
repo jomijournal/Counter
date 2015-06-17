@@ -1,12 +1,15 @@
-import urllib2
-import SimpleHTTPServer
-import SocketServer
+import tornado.ioloop
+import tornado.web
 
-PORT = 8000
+class MainHandler(tornado.web.RequestHandler):
+	def get(self):
+		print self
+		self.write("Hello, world")
 
-Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+application = tornado.web.Application([
+	(r"/", MainHandler),
+])
 
-httpd = SocketServer.TCPServer(("", PORT), Handler)
-
-print "serving at port", PORT
-httpd.serve_forever()
+if __name__ == "__main__":
+	application.listen(8888)
+	tornado.ioloop.IOLoop.current().start()
