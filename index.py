@@ -7,17 +7,20 @@ except ImportError:
     import xml.etree.ElementTree as ET
     
 
-import getClickyData
+#import getClickyData
 
 
 class MainHandler(tornado.web.RequestHandler):
 	def post(self):
+		
 		raw_data = self.request.body
 		
+		print raw_data
 		
-		clickyXML = getClickyData.getClickyData(rawData)
+		#clickyXML = getClickyData.getClickyData(rawData)
 		
-		self.write(generateCounterXML(clickyXML)
+		#self.write(generateCounterXML(clickyXML)
+		self.write("hi!!")
 
 application = tornado.web.Application([
 	(r"/", MainHandler),
