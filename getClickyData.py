@@ -16,8 +16,8 @@ import config
 def getMonths(beginDate, endDate):
 	startMonth = beginDate.month
 	endMonths  = (endDate.year-beginDate.year)*12 + endDate.month+1
-	return [datetime.strftime(datetime(year=yr, month=mn, day=1), '%Y-%m') for (yr, mn) in (
-			((m - 1) / 12 + dt1.year, (m - 1) % 12 + 1) for m in range(start_month, end_months)
+	return [datetime(year=yr, month=mn, day=1).strftime('%Y-%m') for (yr, mn) in (
+			((m - 1) / 12 + beginDate.year, (m - 1) % 12 + 1) for m in range(startMonth, endMonths)
 			)]
 
 def getClickyData(month):
@@ -41,14 +41,14 @@ def getClickyData(month):
 # daily visitors and actions stats during the specified time period from Clicky
 def parseRequest(info):
 	requestXML = createTree(info)
-	beginDate = datetime.strftime(requestXML.find('ReportDefinition/Filters/UsageDateRange/Begin').text.strip(),
+	beginDate = datetime.strptime(requestXML.find('ReportDefinition/Filters/UsageDateRange/Begin').text.strip(),
 								  '%Y-%m-%d')
-	endDate   = datetime.strftime(requestXML.find('ReportDefinition/Filters/UsageDateRange/End').text.strip(),
+	endDate   = datetime.strptime(requestXML.find('ReportDefinition/Filters/UsageDateRange/End').text.strip(),
 								  '%Y-%m-%d')
 	print beginDate, endDate
 	
 	months = getMonths(beginDate, endDate)
-	print getMonths
+	print months
 	xmlContent = ''
 	#for month in months:
 		#try:
