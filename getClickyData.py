@@ -20,9 +20,9 @@ import config
 # daily visitors and actions stats during the specified time period from Clicky
 def getClickyData(info):
 	requestXML = createTree(info)
-	beginDate = datetime.strptime(requestXML.find('ReportDefinition/Filters/UsageDateRange/Begin').text.strip(),
+	beginDate = datetime.strftime(requestXML.find('ReportDefinition/Filters/UsageDateRange/Begin').text.strip(),
 								  '%Y-%m-%d')
-	endDate   = datetime.strptime(requestXML.find('ReportDefinition/Filters/UsageDateRange/End').text.strip(),
+	endDate   = datetime.strftime(requestXML.find('ReportDefinition/Filters/UsageDateRange/End').text.strip(),
 								  '%Y-%m-%d')
 	print beginDate, endDate
 	# return requestXML
