@@ -13,6 +13,7 @@ except ImportError:
 	
 import config
 import os
+import MySQLdb as msql
 
 def getMonths(beginDate, endDate):
 	startMonth = beginDate.month
@@ -21,14 +22,54 @@ def getMonths(beginDate, endDate):
 			((m - 1) / 12 + beginDate.year, (m - 1) % 12 + 1) for m in range(startMonth, endMonths)
 			)]
 
-def getClickyData(month):
+def getIPsFromID(rID):
+	con = False
+	ipList = ''
+	try:
+		con =  msql.connect(host=config.db['host'],
+							   port=config.db['port'],
+							   user=config.db['user'],
+							   passwd=config.db['passwd'],
+							   db=config.db['db'])
+		cur = con.cursor()
+		cur.execute('SELECT start, end FROM SELECT wp_institution_ips WHERE location_id=' + rID)
+		
+		rows = cur.fetchall()
+		
+		for row in rows:
+			ipList += row[0] + ',' + row[1] +'|'
+		
+	except msql.Error, e:
+		print "Error %d: %s" % (e.args[0],e.args[1])
+		ipList = '2080327680,2080331775'
+	
+	if con:
+		con.close()
+	
+	return ipList
+
+def parseClickyDate(data):
+	clickyDataTree = createTree(data)
+	visitorCount = clickyDataTree.find('type[@type="segmentation"]/date/item/value')
+	if(visitorCount):
+		return int(visitorCount.text)
+	return 0
+
+def getClickyData(months, ips):
+	
+	print 'http://api.clicky.com/api/stats/4?' + 
+		'site_id='+ config.site_id + '&sitekey=' + config.sitekey + 
+		'&type=visitors-list&date=' + month + 
+		'&output=xml&ip_address=' + ips
+	
 	# For more info: http://clicky.com/help/api
 	requested = urllib2.Request('http://api.clicky.com/api/stats/4?' + 
 		'site_id=' + config.site_id + '&sitekey=' + config.sitekey + 
-		'&type=visitors,actions&date=' + month +'&output=xml')
+		'&type=visitors-list&date=' + month + 
+		'&output=xml&ip_address=' + ips)
 	try:
 		response = urllib2.urlopen( requested )
-		return parseClickyData(response)
+		return parseClickyData(response.read())
 	except urllib2.HTTPError as error:
 		print 'The server couldn\'t fulfill the request.'
 		print 'Error code: ', error.code
@@ -46,34 +87,20 @@ def parseRequest(info):
 								  '%Y-%m-%d')
 	endDate   = datetime.strptime(requestXML.find('ReportDefinition/Filters/UsageDateRange/End').text.strip(),
 								  '%Y-%m-%d')
+	
+	requestorID = requestXML.find('Requestor/ID').text 
+	
+	ips = getIPsFromID(requestorID)
 	print beginDate, endDate
 	
 	months = getMonths(beginDate, endDate)
-	print months
-	xmlContent = ''
 	
-	now = datetime.now()
+	data = []
 	
 	for month in months:
-		monthFile = 'cache/' + month + '.xml'
-		if os.path.isfile():
-			try:
-				mtime = os.path.getmtime(monthFile)
-			except OSError:
-				mtime = 0
-			modified = datetime.fromtimestamp(mtime)
-			
-			if modified.year < now.year or 
-			   (modified.year == now.year and modified.month < now.month):
-				
-				with open(monthFile) as f:
-					xmlContent += f.read()
-			else:
-				xmlContent += getClickyData(month)
-		else:
-			xmlContent += getClickyData(month)
-	
-	return xmlContent
+		data.append((month, getClickyData(month, ips)))
+		
+	return data
 
 
 
