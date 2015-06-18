@@ -32,7 +32,7 @@ def getClickyData(info):
 	# For more info: http://clicky.com/help/api
 	requested = urllib2.Request('http://api.clicky.com/api/stats/4?' + 
 		'site_id=' + config.site_id + '&sitekey=' + config.sitekey + 
-		'93c104e29de28bd9&type=visitors,actions&' +
+		'&type=visitors,actions&' +
 		'date=' + beginDate + ',' + endDate + '&daily=1&output=xml')
 	try:
 		response = urllib2.urlopen( requested )
