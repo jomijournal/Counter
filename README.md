@@ -20,3 +20,11 @@ Counter Reports contain usage data on a month by month basis, and SUSHI requests
 so from that date range it is necessary to extract a list of months. Then, you can take the list of months and check if cached data for that months exist. If it doesn't exist, get the data from analytics.
 
 Then just assemble it and return it. This part I will describe better later.
+
+
+# Testing
+
+On unix: Open 2 Terminals. One will be the client (and show the response) and one will be the server (and show the internal server errors).
+ * To start the server, cd into this folder and do 'python indexing.py'
+ * To start the client, cd into this folder and do 'curl -X POST -d @sampleRequest.xml http://localhost:8888/'
+   * Substitute sampleRequest.xml for other requests if wanted
