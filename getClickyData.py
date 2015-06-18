@@ -12,6 +12,7 @@ except ImportError:
 	import xml.etree.ElementTree as ET
 	
 import config
+import os
 
 def getMonths(beginDate, endDate):
 	startMonth = beginDate.month
@@ -50,18 +51,27 @@ def parseRequest(info):
 	months = getMonths(beginDate, endDate)
 	print months
 	xmlContent = ''
-	#for month in months:
-		#try:
-			#with open('cache/' + month + '.xml') as monthCache:
-				#xmlContent += monthCache.read()
-		#except IOError:
-			#xmlContent += getClickyData(month)
+	
+	now = datetime.now()
+	
+	for month in months:
+		monthFile = 'cache/' + month + '.xml'
+		if os.path.isfile():
+			try:
+				mtime = os.path.getmtime(monthFile)
+			except OSError:
+				mtime = 0
+			modified = datetime.fromtimestamp(mtime)
+			
+			if modified.year < now.year or 
+			   (modified.year == now.year and modified.month < now.month):
 				
-	# return requestXML
-	# Date range request format: YYYY-MM-DD,YYYY-MM-DD, e.g. 2015-05-01,2015-05-31
-	# According to API:
-		# The maximum range is 750 days for Pro users, and 31 days for everyone else.
-		
+				with open(monthFile) as f:
+					xmlContent += f.read()
+			else:
+				xmlContent += getClickyData(month)
+		else:
+			xmlContent += getClickyData(month)
 	
 	return xmlContent
 
