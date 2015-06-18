@@ -1,6 +1,9 @@
 # Counter
 Creates a Counter compliant report from Clicky data
 
+General information on the SUSI protocols can be found [here](http://www.niso.org/schemas/sushi/), although it is 
+not told in the clearest of manners.
+
 Counter Reports are generated nytime someone makes a SUSHI request for usage data. 
 The request is a POST request to our server with an XML file. That XML file should behave in accordance 
 with the ReportRequest defined in [this schema](http://www.niso.org/schemas/sushi/sushi1_7.xsd), 
