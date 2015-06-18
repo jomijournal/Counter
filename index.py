@@ -6,7 +6,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
     
-from getClickyData import getClickyData
+from getClickyData import parseRequest
 from generateCounterXML import generateCounterXML
 
 
@@ -16,9 +16,9 @@ class MainHandler(tornado.web.RequestHandler):
 		
 		#print raw_data
 		
-		clickyXML = getClickyData(raw_data)
+		clickyXMLString = parseRequest(raw_data)
 		
-		self.write(generateCounterXML(clickyXML))
+		self.write(generateCounterXML(clickyXMLString))
 
 
 application = tornado.web.Application([
