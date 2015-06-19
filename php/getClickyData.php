@@ -9,10 +9,8 @@
 	function parseClickyData($responseText) {
 		$xml = simplexml_load_string($responseText) or die("Unable to parse Clicky data");
 		
-		$visitData = $xml->xpath("type[@type=\"visitors\"]/date/item/value") or die("Unable to parse Clicky data");
+		$visitData = $xml->xpath("type[@type=\"visitors\"]/date/item/value") or fail("Unable to parse Clicky data", 12);
 		
-		
-		// Do the parsing...
 		return intval((string)$visitData);;
 	}
 	

@@ -1,12 +1,32 @@
 <?php
-
+	/******************************************************************************************
+	*                                                                                         *
+	* counter.php                                                                             *
+	*                                                                                         *
+	* Nolan Hawkins                                                                           *
+	*                                                                                         *
+	* The access point for the SUSHI protocol                                                 *
+	* Make valid SUSHI requests to this page, with the requestor ID set to the ID JoMI holds  *
+	* internally for each institution and with a date range set, and a COUNTER report will    *
+	* be generated which tells the monthly usage for that institurion in that date range of   *
+	* of JOMI. (This monthly usage is currently in  humber of unique visitors).               *
+	*                                                                                         *
+	* No testing has been done yet, but hopefully this works somewhat correctly.              *	
+	* TODO: Testing, Caching, front end stuff                                                 *
+	*                                                                                         *
+	*                                                                                         *
+	******************************************************************************************/
+	
 	$currentDate = date('m/d/Y h:i:s a', time());
 	$requestorElement = False;
 	$customerElement  = False;
 	$reportElement    = False;
 	
+	// config.php stores credentials
 	require_once "config.php";
+	// failure.php stores the fail() function, which handles everything that could go wrong
 	require_once "failure.php";
+	// getClickyData.php gets information from clicky about a particular month
 	require_once "getClickyData.php";
 	
 	// Given an institution id, return the associated IPs in the format that clicky wants
