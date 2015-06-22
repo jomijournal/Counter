@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ReportRequest created="Optional request created date" id="This seems completey redundant">
 	<Requestor>
-		<ID>
-			ID of requestor organization, possibly same as customer id
-		</ID>
+		<ID>1</ID>
 		<Name>
-			The name of the requestor organization
+			Nolan
 		</Name>
 		<Email>
 			Email to contact humn at requestor organization
 		</Email>
 	</Requestor>
 	<CustomerReference>
-		<ID>
-			The Customer ID
-		</ID>
+		<ID>1</ID>
 		<Name>
 			The Customer Name
 		</Name>
@@ -27,7 +23,7 @@
 					2012-12-30
 				</Begin>
 				<End>
-					2013-1-20
+					2013-2-20
 				</End>
 			</UsageDateRange>
 		</Filters>

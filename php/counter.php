@@ -12,7 +12,7 @@
 	* of JOMI. (This monthly usage is currently in  humber of unique visitors).               *
 	*                                                                                         *
 	* No testing has been done yet, but hopefully this works somewhat correctly.              *	
-	* TODO: Testing, Caching, front end stuff                                                 *
+	* TODO:front end stuff                                                 *
 	*                                                                                         *
 	*                                                                                         *
 	******************************************************************************************/
@@ -22,13 +22,29 @@
 	$customerElement  = False;
 	$reportElement    = False;
 	
-	// config.php stores credentials
-	require_once "config.php";
-	// failure.php stores the fail() function, which handles everything that could go wrong
-	require_once "failure.php";
-	// getClickyData.php gets information from clicky about a particular month
-	require_once "getClickyData.php";
+	define('COUNTER_PATH', ABSPATH.'/wp-content/themes/jomi/Counter/');
 	
+	// config.php stores credentials
+	require_once COUNTER_PATH."config.php";
+	// failure.php stores the fail() function, which handles everything that could go wrong
+	require_once COUNTER_PATH."failure.php";
+	// getClickyData.php gets information from clicky about a particular month
+	require_once COUNTER_PATH."getClickyData.php";
+	
+	// Gather the necessary data for the fail method
+	function getErrorInfo(){
+		global $requestorElement,
+				$customerElement,
+				$reportElement,
+				$currentDate;
+				
+		return array(
+			'requestorElement' => $requestorElement,
+			'customerElement'  => $customerElement,
+			'reportElement'    => $reportElement,
+			'currentDate'      => $currentDate
+		);
+	}
 	// Given an institution id, return the associated IPs in the format that clicky wants
 	//     This format uses commas between IPs to designate ranges and pipes between IPs to
 	//     designate seperate blocks. For example, "0000000000,0000000010|10000000,100000010"
@@ -38,19 +54,18 @@
 	// case all of our usage data is returned.
 	
 	function getIPsFromID($rID) {
+		global $db;
 		// Create connection to our MySQL database
 		$conn = new mysqli($db["host"], $db["user"], $db["pwd"], $db["db"]);
 
 		// Check connection
 		if ($conn->connect_error) {
-			fail("Connection to MySQL failed: " . $conn->connect_error);
+			fail("Connection to MySQL failed: " . $conn->connect_error, 15, getErrorInfo());
 		}
 		
 		// query the database for ip addresses
-		$sqlQuery = "SELECT start, end FROM SELECT wp_institution_ips WHERE location_id=".$rID;
-		
-		$result = $conn->query($sqlQuery);
-		
+		$sqlQuery = "SELECT start, end FROM wp_institution_ips WHERE location_id=".$rID;
+		$result = $conn->query($sqlQuery) or fail("Database query error: ".$sqlQuery." did not work",16, getErrorInfo());
 		// generate list of ip addresses from rows of query
 		// the response will be like:
 		// [ ["start" => _start of ip block_, "end" => _end of ip block_], ... ]
@@ -68,14 +83,14 @@
 	// Returns an array of months that happen between (and including) the two dates, 
 	// represented as strings in the form of "YYYY-MM"
 	function getMonths($beginDate, $endDate){
-		$bMonth = $beginDate["tm_month"]; $bYear = $beginDate["tm_year"];
-		$eMonth =   $endDate["tm_month"]; $eYear =   $endDate["tm_year"];
+		$bMonth = $beginDate["tm_mon"]; $bYear = $beginDate["tm_year"];
+		$eMonth =   $endDate["tm_mon"]; $eYear =   $endDate["tm_year"];
 		
 		$months = array();
 		
 		while($bYear < $eYear ||
 		   ($bYear == $eYear && $bMonth <= $eMonth)) {
-			$months.append((string)($bYear + 1900)."-".sprintf("%02d",$bMonth + 1);
+			array_push($months, (string)($bYear + 1900)."-".sprintf("%02d",$bMonth + 1));
 			if($bMonth == 11){
 				$bMonth = 0;
 				$bYear++;
@@ -90,26 +105,31 @@
 	// parse the relevant data from the posted XML file, in accordance with the SUSHI ReportRequest Schema defined at
 	// http://www.niso.org/schemas/sushi/sushi1_7.xsd    and visualized at
 	// http://www.niso.org/schemas/sushi/diagrams/sushi1_7_ReportRequest.png
-	$xmlString = file_get_contents('php://input') or fail("Bad Request - No POSTed file", 1);
+	$xmlString = file_get_contents('php://input') or fail("Bad Request - No POSTed file", 1, getErrorInfo());
+	$xml = simplexml_load_file('php://input') or fail("Bad Request - Couldn't parse POSTed file as XML", 2, getErrorInfo());
 	
-	$xml = simplexml_load_string($xmlstring) or fail("Bad Request - Couldn't parse POSTed file as XML", 2);
 	
+	$requestorElement = $xml->xpath("Requestor") or fail("Couldn't find Request element", 3, getErrorInfo());
+	$requestorElement = $requestorElement[0];
+	$customerElement  = $xml->xpath("CustomerReference") or fail("Couldn't find CustomerReference element", 4, getErrorInfo());
+	$customerElement  = $customerElement[0];
+	$reportElement    = $xml->xpath("ReportDefinition") or fail("Couldin't find ReportDefinition", 5, getErrorInfo());
+	$reportElement    = $customerElement[0];
 	
-	$requestorElement = $xml->xpath("Requestor") or fail("Couldn't find Request element", 3);
-	$customerElement  = $xml->xpath("CustomerReference") or fail("Couldn't find CustomerReference element", 4);
-	$reportElement    = $xml->xpath("ReportDefinition") or fail("Couldin't find ReportDefinition", 5);
+	$beginDateData = $xml->xpath("ReportDefinition/Filters/UsageDateRange/Begin") or fail("Bad Request - Begin Date not specified", 6, getErrorInfo());
+	$beginDateData = trim((string)($beginDateData[0]));
 	
-	$beginDateData = $xml->xpath("ReportDefinition/Filters/UsageDateRange/Begin") or fail("Bad Request - Begin Date not specified", 6);
-	$beginDateData = (string)$beginDateData;
+	$endDateData = $xml->xpath("ReportDefinition/Filters/UsageDateRange/End")or fail("Bad Request - End date not specified", 7, getErrorInfo());
+	$endDateData = trim((string)($endDateData[0]));
 	
-	$endDateData = $xml->xpath("ReportDefinition/Filters/UsageDateRange/End")or fail("Bad Request - End date not specified", 7);
-	$endDateData = (string)$endDateData;
+	$beginDate = strptime($beginDateData, "%Y-%m-%d") or fail("Bad Request - Begin Date formatted incorrectly", 8, getErrorInfo());
+	$endDate   = strptime($endDateData  , "%Y-%m-%d") or fail("Bad Request - End Date formatted incorrectly", 9, getErrorInfo());
 	
-	$beginDate = strptime($beginDateData, "%Y-%m-%d") or fail("Bad Request - Begin Date formatted incorrectly", 8);
-	$endDate   = strptime($endDateData  , "%Y-%m-%d") or fail("Bad Request - End Date formatted incorrectly", 9);
+	$requestorID = $xml->xpath("Requestor/ID") or fail("Bad Request - Unspecified ID", 10, getErrorInfo());
+	$requestorID = trim((string)($requestorID[0]));
 	
-	$requestorID = $xml->xpath("Requestor/ID") or fail("Bad Request - Unspecified ID", 10);
-	
+	$requestorName = $xml->xpath("Requestor/Name") or fail("Bad Request - Unspecified ID", 10, getErrorInfo());
+	$requestorName = trim((string)($requestorName[0]));
 	
 	// generate list of ips from the requesting ID
 	$ipList = getIPsFromID((string)$requestorID);
@@ -122,9 +142,15 @@
 	foreach($monthList as $month) {
 		// define the end points of the date range for that month (daysInMonth is also defined in getClickyData.php)
 		$monthStart = $month."-01";
-		$monthEnd   = $month."-".sprintf("%02d",daysInMonth($month));
-		$monthsData = [$monthStart, $monthEnd, getClickyData($month, $ipList)];
-		$data->append($monthData);
+		$monthEnd   = $month."-".sprintf("%02d",getDaysInMonth($month));
+		
+		$cacheFile =  COUNTER_PATH."cache/".$requestorID."_".$month.".dat";
+		
+		$monthsData = [$monthStart,
+						$monthEnd,
+						findClickyData($month, $ipList, $cacheFile, getErrorInfo())];
+		
+		array_push($data, $monthsData);
 	}
 	
 	
@@ -133,7 +159,7 @@
 <ReportResponse ID="22" Created="<?php echo $currentDate; ?>">
 	<?php 
 		echo $requestorElement->asXML();
-		echo $customerReferenceElement->asXML();
+		echo $customerElement->asXML();
 		echo $reportElement->asXML();
 	?>
          <Report>
@@ -146,7 +172,7 @@
                   </Contact>
                </Vendor>
                <Customer>
-                  <Name><?php echo $requestorName; ?>/Name>
+                  <Name><?php echo $requestorName; ?></Name>
                   <ID><?php echo $requestorID; ?></ID>
                   <ReportItems>
                      <ItemIdentifier>
@@ -187,14 +213,11 @@
 EOT;
 	}
 ?>
-                  </ReportItems>
-               </Customer>
-            </Report>
-         </Report>
-      </ReportResponse>
-   </s:Body>
-</s:Envelope>
-	
+			</ReportItems>
+		</Customer>
+	</Report>
+	</Report>
+</ReportResponse>
 	
 	
 	
