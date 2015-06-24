@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportResponse ID="22" Created="06/24/2015 04:21:24 pm">
+    <Requestor><ID>9</ID><Name>MGH</Name></Requestor><CustomerReference><ID>9</ID><Name>MGH</Name></CustomerReference><CustomerReference><ID>9</ID><Name>MGH</Name></CustomerReference>        <Report>
+            <Report Name="JR1" Version="4.1" Created="06/24/2015 04:21:24 pm" ID="JR1" title="Journal Report 1">
+            <Vendor>
+                <Name>Journal of Medical Insight</Name>
+                <ID>JoMI</ID>
+                <Contact>
+                    <E-mail>contact@jomi.com</E-mail>
+                </Contact>
+            </Vendor>
+            <Customer>
+                <Name>MGH</Name>
+                <ID>9</ID>
+                <ReportItems>
+                    <ItemIdentifier>
+                        <Type>Print_ISSN</Type>
+                        <Value>2373-6003</Value>
+                    </ItemIdentifier>
+                    <ItemPlatform>JoMI</ItemPlatform>
+                    <ItemPublisher>Journal of Medical Insight</ItemPublisher>
+                    <ItemName>Journal of Medical Insight</ItemName>
+                    <ItemDataType>Journal</ItemDataType>
+                    
+                    <ItemPerformance>
+                        <Period>
+                            <Begin>2014-07-01</Begin>
+                            <End>2014-07-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2014-08-01</Begin>
+                            <End>2014-08-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2014-09-01</Begin>
+                            <End>2014-09-30</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2014-10-01</Begin>
+                            <End>2014-10-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>7</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>3</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2014-11-01</Begin>
+                            <End>2014-11-30</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2014-12-01</Begin>
+                            <End>2014-12-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>18</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>3</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2015-01-01</Begin>
+                            <End>2015-01-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>1</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>1</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2015-02-01</Begin>
+                            <End>2015-02-28</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2015-03-01</Begin>
+                            <End>2015-03-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>4</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>1</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2015-04-01</Begin>
+                            <End>2015-04-30</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>1</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>1</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2015-05-01</Begin>
+                            <End>2015-05-31</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>0</Count>
+                        </Instance>
+                    </ItemPerformance>                    <ItemPerformance>
+                        <Period>
+                            <Begin>2015-06-01</Begin>
+                            <End>2015-06-30</End>
+                        </Period>
+                        <Category>Requests</Category>
+                        <Instance>
+                            <MetricType>ft_total</MetricType>
+                            <Count>2</Count>
+                        </Instance>
+                        <Instance>
+                            <MetricType>other</MetricType>
+                            <Count>1</Count>
+                        </Instance>
+                    </ItemPerformance>            </ReportItems>
+        </Customer>
+    </Report>
+    </Report>
+</ReportResponse>
