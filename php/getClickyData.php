@@ -43,13 +43,12 @@
                     "&segments=visitors,actions&date=".$dateRange.
                     "&output=xml&ip_address=".$ipList;
             // Note that wp_remote_get must be used as the wordpress equivelant of http_get
-            $responseText = wp_remote_get($url) or fail("Failed to load analytics", 11, $requiredErrorInfo);
-            usleep(2000);
+            $responseText = wp_remote_get($url,array('timeout'=> 10,)) or fail("Failed to load analytics", 11, $requiredErrorInfo);
+            usleep(4000);
             if(!array_key_exists("response", $responseText) ||
                !array_key_exists("code",$responseText["response"]) ||
                $responseText["response"]["code"] != 200){
-                var_dump($responseText);
-                fail("Failed to load analytics", 11, $requiredErrorInfo);
+                fail("Failed to load analytics: ".var_export($responseText, true)."\n for request of:\n".$url, 11, $requiredErrorInfo);
             }
             $weekResults = parseClickyData($responseText["body"], $requiredErrorInfo);
             for($i = 0, $j = count($totalValues); $i < $j; $i++) {
