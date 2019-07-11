@@ -5,7 +5,7 @@ within which the customer is operating,
 and the dates between which the customer wants data. We must in turn respond with monthly statistics for usage of the
 JoMI site at their institution between the dates provided.
 
-The python folder represents an abandonned work in progress, if we ever need to come back to it I suggest we refactor to be more similar to the php folder. The php folder represents a complete implementation of the COUNTER protocol, along with a front-end visulization of the response.
+The python folder represents an abandoned work in progress, if we ever need to come back to it I suggest we refactor to be more similar to the php folder. The php folder represents a complete implementation of the COUNTER protocol, along with a front-end visulization of the response.
 
 General information on the SUSI protocols can be found [here](http://www.niso.org/schemas/sushi/), although it is 
 not told in the clearest of manners.
